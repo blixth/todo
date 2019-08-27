@@ -15,16 +15,32 @@ router.post('/', async (req, res, next) =>
 
 	try
 	{
+		await TodoService.validate(body);
 		const todo = await TodoService.create(body);
 
-		if(body.guid != null)
+		return res.status(201).json({ todo: todo });
+	}
+	catch(err)
+	{
+		if (err.name === 'ValidationError')
 		{
-			todo.guid = body.guid;
+        	return res.status(400).json({ error: err.message });
 		}
 
-		res.cookie('guid', todo.guid, { maxAge: 900000, httpOnly: true });
+		// unexpected error
+		return next(err);
+	}
+});
 
-		return res.status(201).json({ todo: todo });
+router.put('/:id', async (req, res, next) => {
+	const body = req.body;
+
+	try
+	{
+		await TodoService.validate(body);
+		const todo = await TodoService.update(body);
+
+		return res.status(200).json({ todo: todo });
 	}
 	catch(err)
 	{
