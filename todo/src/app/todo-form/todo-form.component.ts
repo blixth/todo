@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { HttpClient } from "@angular/common/http";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'todo-form',
@@ -11,12 +13,19 @@ export class TodoFormComponent implements OnInit {
   registered = false;
   submitted = false;
   todoForm:  FormGroup;
+  guid: string;
+  serviceErrors:any = {};
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router) {
+    this.http.get('api/v1/generate_uid').subscribe((data: any) => {
+      this.guid = data.guid;
+    }, error => {
+      console.log("Could not get uid from server");
+    })
   }
 
-   invalidDescription() {
-    return (this.submitted && this.todoForm.controls.description.errors !== null);
+  invalidDescription() {
+    return (this.submitted && (this.serviceErrors.description !== null || this.todoForm.controls.description.errors !== null));
   }
 
   ngOnInit() {
@@ -36,7 +45,13 @@ export class TodoFormComponent implements OnInit {
   	}
   	else
   	{
-  		this.registered = true;
+      let data: any = Object.assign({guid: this.guid}, this.todoForm.value);
+      
+      this.http.post('/api/v1/todo', data).subscribe((data: any) => {
+        this.router.navigate(['/']);
+      }, error => {
+        this.serviceErrors = error.error.error;
+      });
   	}
   }
 }
