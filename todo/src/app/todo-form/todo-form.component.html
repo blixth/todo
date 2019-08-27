@@ -1,0 +1,16 @@
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+	<div class="form-group" [ngClass]="{ 'has-error': invalidDescription() }">
+		<label for="description" class="control-label">Description</label>
+        <input type="text" class="form-control" formControlName="description" id="description" name="description">
+        <p id="description_error" *ngIf="invalidDescription()" class="help-block">Description is invalid</p>
+	</div>
+
+	<div class="form-group">
+		<label for="expiration_date" class="control-label">Expiration date</label>
+        <input type="date" class="form-control" formControlName="expiration_date"  id="expiration_date" name="expiration_date">
+    </div>
+    
+    <div class="form-group has-error">
+		<button type="submit" class="btn btn-primary">Save</button>
+	</div>
+</form>	    
