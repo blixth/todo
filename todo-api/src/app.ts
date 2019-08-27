@@ -16,12 +16,22 @@ class App {
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(this.loggerMiddleware);
   }
 
   private initializeControllers(controllers) {
     controllers.forEach(controller => {
       this.app.use("/api/v1", controller.router);
     });
+  }
+
+  private loggerMiddleware(
+    request: express.Request,
+    response: express.Response,
+    next: () => void
+  ) {
+    console.log(`${request.method} ${request.path}`);
+    next();
   }
 
   public listen() {

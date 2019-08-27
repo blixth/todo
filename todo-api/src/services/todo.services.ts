@@ -61,24 +61,13 @@ class TodoService {
   }
 
   public static validate(data: any) {
-    var vres = TodoService.todoValidator.validate(
-      data,
-      TodoService.todoVSchema
-    );
+	const check = this.todoValidator.compile(this.todoVSchema);
+	const result = check(data);
 
-    if (!(vres === true)) {
-      let errors = {},
-        item;
-
-      for (const index in vres) {
-        item = vres[index];
-
-        errors[item.field] = item.message;
-      }
-
+    if (result !== true) {
       throw {
         name: "ValidationError",
-        message: errors
+        message: result
       };
     }
   }

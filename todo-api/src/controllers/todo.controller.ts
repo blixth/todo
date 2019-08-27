@@ -70,7 +70,7 @@ class TodosController {
     next: (arg0: any) => void
   ) => {
     try {
-      const todo = await TodoService.delete(request.params.id);
+      await TodoService.delete(request.params.id);
 
       return response.json({ success: true });
     } catch (err) {
