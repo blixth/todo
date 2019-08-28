@@ -30,7 +30,6 @@ class TodosController {
     const body = request.body;
 
     try {
-      await TodoService.validate(body);
       const todo = await TodoService.create(body);
 
       return response.status(201).json({ todo: todo });
@@ -51,7 +50,6 @@ class TodosController {
     const body = request.body;
 
     try {
-      await TodoService.validate(body);
       const todo = await TodoService.update(request.params.id, body);
 
       return response.status(200).json({ todo: todo });

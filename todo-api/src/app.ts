@@ -27,7 +27,7 @@ class App {
 
   private loggerMiddleware(
     request: express.Request,
-    response: express.Response,
+    _response: express.Response,
     next: () => void
   ) {
     console.log(`${request.method} ${request.path}`);

@@ -1,15 +1,16 @@
 let Validator = require("fastest-validator");
 let uid = require("uid-safe");
 import TodoModel from "../models/todo.model";
+import TodoRepository from "../repositories/todo.repository";
+import ValidationError from "../models/validation.error.model";
 
 class TodoService {
-  private static todos = [] as Array<TodoModel>;
   private static todoValidator = new Validator();
   private static todoVSchema = {
     description: { type: "string", min: 1, max: 50 }
   };
 
-  public static create(data: { description: String; expiration_date: Date }) {
+  public static create(data: { description: string; expiration_date: Date }) {
     let todo = new TodoModel(
       uid.sync(18),
       data.description,
@@ -17,16 +18,19 @@ class TodoService {
       new Date(),
       false
     );
-    TodoService.todos.push(todo);
 
-    return todo;
+    TodoService.validate(todo);
+
+    return TodoRepository.create(todo);
   }
 
   public static update(guid: string, data: { is_completed: Boolean }) {
-    let todo = TodoService.todos.find(t => t.guid === guid);
+    let todo = TodoRepository.get(guid);
 
     if (todo) {
       todo.is_completed = data.is_completed;
+      TodoService.validate(todo);
+      TodoRepository.update(todo);
 
       return todo;
     }
@@ -35,13 +39,13 @@ class TodoService {
   }
 
   public static retrieveAll() {
-    return TodoService.todos.sort(
+    return TodoRepository.getAll().sort(
       (a, b) => a.created_date.getTime() - b.created_date.getTime()
     );
   }
 
-  public static retrieve(guid: String) {
-    let todo = TodoService.todos.find(t => t.guid === guid);
+  public static retrieve(guid: string) {
+    let todo = TodoRepository.get(guid);
 
     if (todo) {
       return todo;
@@ -51,24 +55,21 @@ class TodoService {
   }
 
   public static delete(guid: string) {
-    let todo = TodoService.todos.find(t => t.guid === guid);
+    let todo = TodoRepository.get(guid);
 
     if (todo) {
-      TodoService.todos = TodoService.todos.filter(t => t.guid !== guid);
+      TodoRepository.delete(todo);
     } else {
       throw new Error("Unable to retrieve a todo by (guid:" + guid + ")");
     }
   }
 
   public static validate(data: any) {
-	const check = this.todoValidator.compile(this.todoVSchema);
-	const result = check(data);
+    const check = TodoService.todoValidator.compile(TodoService.todoVSchema);
+    const result = check(data);
 
     if (result !== true) {
-      throw {
-        name: "ValidationError",
-        message: result
-      };
+      throw new ValidationError("ValidationError", result);
     }
   }
 }
