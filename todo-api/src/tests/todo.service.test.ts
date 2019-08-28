@@ -1,5 +1,6 @@
 import TodoService from "../services/todo.services";
 import ValidationError from "../models/validation.error.model";
+import TodoModel from "../models/todo.model";
 
 describe("The TodoService", () => {
   describe("When retrieving all todos", () => {
@@ -68,7 +69,7 @@ describe("The TodoService", () => {
       });
 
       TodoService.delete(createdTodo.guid);
-      
+
       expect(() => {
         TodoService.retrieve("does not exist!");
       }).toThrow(Error);
@@ -128,7 +129,7 @@ describe("The TodoService", () => {
   describe("When validating a todo", () => {
     it("should throw exception when missing required field: description", () => {
       expect(() => {
-        TodoService.create({ description: "", expiration_date: null });
+        TodoService.create({ description: "", expiration_date: new Date() });
       }).toThrow(ValidationError);
     });
   });
@@ -140,9 +141,29 @@ describe("The TodoService", () => {
       expect(() => {
         TodoService.create({
           description: "123456789012345678901234567890123456789012345678901",
-          expiration_date: null
+          expiration_date: new Date()
         });
       }).toThrow(ValidationError);
     });
   });
 });
+
+describe("The TodoModel", () => {
+  describe("When creating a todo", () => { 
+    it("should set is_expired correctly", () => {
+      let todo = new TodoModel("", "", new Date(2018,1), new Date(), false);
+
+      expect(todo.is_expired).toEqual(true);
+    })
+  })
+})
+
+describe("The TodoModel", () => {
+  describe("When creating a todo", () => { 
+    it("should set is_expired correctly", () => {
+      let todo = new TodoModel("", "", new Date(2020,1), new Date(), false);
+      
+      expect(todo.is_expired).toEqual(false);
+    })
+  })
+})

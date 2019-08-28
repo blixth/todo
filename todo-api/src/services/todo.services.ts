@@ -7,7 +7,8 @@ import ValidationError from "../models/validation.error.model";
 class TodoService {
   private static todoValidator = new Validator();
   private static todoVSchema = {
-    description: { type: "string", min: 1, max: 50 }
+    description: { type: "string", min: 1, max: 50 },
+    expiration_date: { type: "date" }
   };
 
   public static create(data: { description: string; expiration_date: Date }) {
