@@ -1,5 +1,5 @@
 ### Build and start todo-api
-npm run dev
+/todo/todo-api/ - npm run dev
 
 ### Build and start angular
-npm start
+/todo/todo/ - npm start
