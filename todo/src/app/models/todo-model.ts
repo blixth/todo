@@ -1,13 +1,8 @@
-export class TodoModel {
-    id: string;
-    description: string;
-    expiration_date: Date;
-
-    constructor(obj: any = null)
-	{
-		if(obj != null)
-		{
-			Object.assign(this, obj);
-		}
-	}
+export interface TodoModel {
+	guid: string;
+	description: string;
+	expiration_date: Date;
+	created_date: Date;
+	is_completed: Boolean;
+	is_expired: Boolean;
 }

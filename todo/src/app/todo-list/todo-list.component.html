@@ -1,1 +1,24 @@
-<p>todo-list works!</p>
+<h1>Todos</h1>
+
+<button class="btn btn-primary" routerLink="/new" routerLinkActive="active">Create new</button>
+
+<table class="table">
+    <thead>
+        <th>Description</th>
+        <th>Expiration date</th>
+        <th>Completed</th>
+        <th>Expired</th>
+        <th></th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr *ngFor="let todo of todoList.todos">
+            <td>{{ todo.description }}</td>
+            <td>{{ todo.expiration_date.substring(0,10) }}</td>
+            <td>{{ todo.is_completed ? 'Yes' : 'No' }}</td>
+            <td>{{ todo.is_expired ? 'Yes' : 'No' }}</td>
+            <td><button (click)="done(todo)" class="btn btn-primary">Done!</button></td>
+            <td><button (click)="delete(todo)" class="btn">Delete</button></td>
+        </tr>
+    </tbody>
+</table>
