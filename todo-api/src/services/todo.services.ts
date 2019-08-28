@@ -11,11 +11,11 @@ class TodoService {
     expiration_date: { type: "date" }
   };
 
-  public static create(data: { description: string; expiration_date: Date }) {
+  public static create(description: string, expiration_date: Date) {
     let todo = new TodoModel(
       uid.sync(18),
-      data.description,
-      data.expiration_date,
+      description,
+      expiration_date,
       new Date(),
       false
     );
@@ -25,11 +25,11 @@ class TodoService {
     return TodoRepository.create(todo);
   }
 
-  public static update(guid: string, data: { is_completed: Boolean }) {
+  public static update(guid: string, is_completed: Boolean) {
     let todo = TodoRepository.get(guid);
 
     if (todo) {
-      todo.is_completed = data.is_completed;
+      todo.is_completed = is_completed;
       TodoService.validate(todo);
       TodoRepository.update(todo);
 

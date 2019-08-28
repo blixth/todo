@@ -6,10 +6,10 @@ describe("The TodoService", () => {
   describe("When retrieving all todos", () => {
     it("should return the todos in created_date order", () => {
       for (var i = 0; i < 10; i++) {
-        TodoService.create({
-          description: i.toString(),
-          expiration_date: new Date()
-        });
+        TodoService.create(
+          i.toString(),
+          new Date()
+        );
       }
 
       let todos = TodoService.retrieveAll();
@@ -34,10 +34,10 @@ describe("The TodoService", () => {
 describe("The TodoService", () => {
   describe("When retrieving a todo", () => {
     it("should return the correct todo item", () => {
-      let createdTodo = TodoService.create({
-        description: "Test 1",
-        expiration_date: new Date()
-      });
+      let createdTodo = TodoService.create(
+        "Test 1",
+        new Date()
+      );
 
       let retrievedTodo = TodoService.retrieve(createdTodo.guid);
 
@@ -63,10 +63,10 @@ describe("The TodoService", () => {
 describe("The TodoService", () => {
   describe("When deleting a todo", () => {
     it("should delete the todo and it should throw error when trying to retrieve it", () => {
-      let createdTodo = TodoService.create({
-        description: "Test 1",
-        expiration_date: new Date()
-      });
+      let createdTodo = TodoService.create(
+        "Test 1",
+        new Date()
+      );
 
       TodoService.delete(createdTodo.guid);
 
@@ -81,10 +81,10 @@ describe("The TodoService", () => {
   describe("When creating a Todo", () => {
     it("should return an object", () => {
       expect(
-        typeof TodoService.create({
-          description: "Test 1",
-          expiration_date: new Date()
-        })
+        typeof TodoService.create(
+          "Test 1",
+          new Date()
+        )
       ).toEqual("object");
     });
   });
@@ -94,10 +94,12 @@ describe("The TodoService", () => {
   describe("When creating a Todo", () => {
     it("should return correct data", () => {
       let date = new Date();
-      let createdTodo = TodoService.create({
-        description: "Test 1",
-        expiration_date: date
-      });
+      let createdTodo = TodoService.create(
+        "Test 1",
+        date
+      );
+
+      date.setHours(0,0,0,0);
 
       expect(createdTodo.description).toEqual("Test 1");
       expect(createdTodo.expiration_date).toEqual(date);
@@ -111,14 +113,12 @@ describe("The TodoService", () => {
 describe("The TodoService", () => {
   describe("When updating a Todo", () => {
     it("is_completed should be updated", () => {
-      let createdTodo = TodoService.create({
-        description: "Test 1",
-        expiration_date: new Date()
-      });
+      let createdTodo = TodoService.create(
+        "Test 1",
+        new Date()
+      );
 
-      createdTodo.is_completed = true;
-
-      TodoService.update(createdTodo.guid, createdTodo);
+      TodoService.update(createdTodo.guid, true);
 
       expect(createdTodo.is_completed).toEqual(true);
     });
@@ -129,7 +129,7 @@ describe("The TodoService", () => {
   describe("When validating a todo", () => {
     it("should throw exception when missing required field: description", () => {
       expect(() => {
-        TodoService.create({ description: "", expiration_date: new Date() });
+        TodoService.create("", new Date() );
       }).toThrow(ValidationError);
     });
   });
@@ -139,10 +139,10 @@ describe("The TodoService", () => {
   describe("When validating a todo", () => {
     it("should throw exception when exceeding the max length of description", () => {
       expect(() => {
-        TodoService.create({
-          description: "123456789012345678901234567890123456789012345678901",
-          expiration_date: new Date()
-        });
+        TodoService.create(
+          "123456789012345678901234567890123456789012345678901",
+          new Date()
+        );
       }).toThrow(ValidationError);
     });
   });

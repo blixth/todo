@@ -30,7 +30,7 @@ class TodosController {
     const body = request.body;
 
     try {
-      const todo = await TodoService.create(body);
+      const todo = await TodoService.create(body.description, new Date(body.expiration_date));
 
       return response.status(201).json({ todo: todo });
     } catch (err) {
@@ -50,7 +50,7 @@ class TodosController {
     const body = request.body;
 
     try {
-      const todo = await TodoService.update(request.params.id, body);
+      const todo = await TodoService.update(request.params.id, body.is_completed);
 
       return response.status(200).json({ todo: todo });
     } catch (err) {
