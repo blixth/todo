@@ -1,11 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators
-} from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { HttpClient } from "@angular/common/http";
+import { TodoService } from 'src/app/services/todo.service';
+import { ITodo } from 'src/app/interfaces/todo.interface';
 
 @Component({
   selector: "todo-form",
@@ -20,14 +17,15 @@ export class TodoFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private todoService: TodoService
   ) {}
 
   invalidDescription() {
     return (
       this.submitted &&
-      ((this.serviceErrors.length > 0 && this.serviceErrors.find(e => e.field === 'description')) ||
+      ((this.serviceErrors.length > 0 &&
+        this.serviceErrors.find(e => e.field === "description")) ||
         this.todoForm.controls.description.errors !== null)
     );
   }
@@ -35,7 +33,8 @@ export class TodoFormComponent implements OnInit {
   invalidExpirationDate() {
     return (
       this.submitted &&
-      ((this.serviceErrors.length > 0 && this.serviceErrors.find(e => e.field === 'expiration_date')) ||
+      ((this.serviceErrors.length > 0 &&
+        this.serviceErrors.find(e => e.field === "expiration_date")) ||
         this.todoForm.controls.expiration_date.errors !== null)
     );
   }
@@ -55,12 +54,11 @@ export class TodoFormComponent implements OnInit {
     } else {
       let data: any = Object.assign(this.todoForm.value);
 
-      this.http.post("/api/v1/todos", data).subscribe(
-        (data: any) => {
+      this.todoService.createTodo(data).subscribe(
+        (_data: ITodo) => {
           this.router.navigate(["/"]);
         },
         error => {
-          console.log(error)
           this.serviceErrors = error.error.error;
         }
       );

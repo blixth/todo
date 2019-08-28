@@ -1,4 +1,4 @@
-export interface TodoModel {
+export interface ITodo {
 	guid: string;
 	description: string;
 	expiration_date: Date;

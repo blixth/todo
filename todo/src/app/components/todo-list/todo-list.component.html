@@ -17,7 +17,7 @@
             <td>{{ todo.expiration_date.substring(0,10) }}</td>
             <td>{{ todo.is_completed ? 'Yes' : 'No' }}</td>
             <td>{{ todo.is_expired ? 'Yes' : 'No' }}</td>
-            <td><button (click)="done(todo)" class="btn btn-primary">Done!</button></td>
+            <td><button [ngClass]="{ 'disabled': todo.is_completed }" (click)="done(todo)" class="btn btn-primary">Done!</button></td>
             <td><button (click)="delete(todo)" class="btn">Delete</button></td>
         </tr>
     </tbody>
