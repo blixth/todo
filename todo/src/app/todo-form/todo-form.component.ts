@@ -25,7 +25,6 @@ export class TodoFormComponent implements OnInit {
   ) {}
 
   invalidDescription() {
-    console.log(this.serviceErrors);
     return (
       this.submitted &&
       ((this.serviceErrors.length > 0 && this.serviceErrors.find(e => e.field === 'description')) ||

@@ -2,7 +2,7 @@
 
 <button class="btn btn-primary" routerLink="/new" routerLinkActive="active">Create new</button>
 
-<table class="table">
+<table *ngIf="todoList" class="table">
     <thead>
         <th>Description</th>
         <th>Expiration date</th>
